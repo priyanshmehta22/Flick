@@ -31,7 +31,6 @@ async function Page() {
                   <p className="!text-small-regular text-light-1">
                     <span className="mr-1 text-primary-500">
                       {activity.author.name}
-                      {console.log(activity)}
                     </span>
                     replied to your flick with : {activity.text}
                   </p>
