@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import * as z from "zod";
+import { useOrganization } from "@clerk/nextjs";
 import { useUploadThing } from "@/lib/uploadThing";
 import {
   FormControl,
@@ -38,7 +39,7 @@ interface Props {
 function PostFlick({ userId }: { userId: string }) {
   const router = useRouter();
   const pathname = usePathname();
-
+  const { organization } = useOrganization();
   const form = useForm({
     resolver: zodResolver(flickValidation),
     defaultValues: {
@@ -51,7 +52,7 @@ function PostFlick({ userId }: { userId: string }) {
     await createFlick({
       text: values.flick,
       author: userId,
-      communityId: null,
+      communityId: organization ? organization.id : null,
       path: pathname,
     });
     router.push("/");
