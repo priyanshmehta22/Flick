@@ -1,15 +1,17 @@
 "use client";
 
-import Link from "next/link";
-import { sidebarLinks } from "../../constants/index";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation"; //tells us about the current url we are on
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { SignOutButton, SignedIn, useAuth } from "@clerk/nextjs";
 
-async function LeftSideBar() {
+import { sidebarLinks } from "@/constants";
+
+const LeftSidebar = () => {
   const router = useRouter();
   const pathname = usePathname();
-  // const { userId } = useAuth();
+
+  const { userId } = useAuth();
 
   return (
     <section className="custom-scrollbar leftsidebar">
@@ -18,49 +20,46 @@ async function LeftSideBar() {
           const isActive =
             (pathname.includes(link.route) && link.route.length > 1) ||
             pathname === link.route;
-          // if (link.route === "/profile") {
-          //   link.route = `${link.route}/${userId}`;
-          // }
+
+          if (link.route === "/profile") link.route = `${link.route}/${userId}`;
+
           return (
             <Link
               href={link.route}
               key={link.label}
-              className={`leftsidebar_link ${isActive && "bg-primary-500"}`}
+              className={`leftsidebar_link ${isActive && "bg-primary-500 "}`}
             >
               <Image
                 src={link.imgURL}
+                alt={link.label}
                 width={24}
                 height={24}
-                alt={link.label}
               />
+
               <p className="text-light-1 max-lg:hidden">{link.label}</p>
             </Link>
           );
         })}
       </div>
+
       <div className="mt-10 px-6">
         <SignedIn>
-          {" "}
-          {/*this code will only show when user is signedIN */}
-          <SignOutButton
-            signOutCallback={() => {
-              router.push("/sign-in"); // once signout is clicked it will redirect to signin, this is a callback function
-            }}
-          >
+          <SignOutButton signOutCallback={() => router.push("/sign-in")}>
             <div className="flex cursor-pointer gap-4 p-4">
               <Image
                 src="/assets/logout.svg"
+                alt="logout"
                 width={24}
                 height={24}
-                alt="logout"
               />
-              <p className="text-light-2 max-lg:hidden ">Logout</p>
+
+              <p className="text-light-2 max-lg:hidden">Logout</p>
             </div>
           </SignOutButton>
         </SignedIn>
       </div>
     </section>
   );
-}
+};
 
-export default LeftSideBar;
+export default LeftSidebar;
